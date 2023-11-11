@@ -1,13 +1,13 @@
 import requests
 import ast
 
-from src.ai21.services.models import Model
-from src.config.config import config
+from ai21.services.models import Model
+from config.config import cfg
 
 
 class TextImprover:
     _url: str = None
-    _api_key: str = config.API_KEY
+    _api_key: str = cfg.API_KEY
     text: str = None
     _payload: dict = {'text': text}
     _headers = {

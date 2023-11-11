@@ -4,7 +4,7 @@ from aiogram.fsm.context import FSMContext
 from aiogram.filters.state import State, StatesGroup
 from aiogram.enums import ParseMode
 
-from src.ai21.services.api_models import GrammarImprover
+from ai21.services.api_models import GrammarImprover
 
 
 class ProcessState(StatesGroup):

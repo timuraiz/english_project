@@ -4,8 +4,14 @@ import logging
 from aiogram import Bot, Dispatcher
 from aiogram.fsm.storage.memory import MemoryStorage
 
-from src.config.config import config
-from src.bot.handlers import help_router, start_router, process_router
+import sys
+import os
+
+# Add the project root directory to the Python path
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
+from config import config
+from bot.handlers import help_router, start_router, process_router
 
 
 async def main():
@@ -23,5 +29,5 @@ async def main():
 
 if __name__ == '__main__':
     dp = Dispatcher(storage=MemoryStorage())
-    bot = Bot(config.BOT_TOKEN)
+    bot = Bot(config.cfg.BOT_TOKEN)
     asyncio.run(main())

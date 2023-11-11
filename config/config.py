@@ -25,4 +25,4 @@ class Config:
         self.API_KEY = os.environ.get("API_KEY")
 
 
-config = Config()
+cfg = Config()
