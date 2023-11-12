@@ -1,8 +1,12 @@
-import requests
-import ast
+from aiohttp import ClientSession
+import logging
+from random import choice
 
 from ai21.services.models import Model
+from ai21.services.models.models import Action
 from config.config import cfg
+
+logging.basicConfig(level=logging.INFO)
 
 
 class TextImprover:
@@ -17,6 +21,7 @@ class TextImprover:
     }
     _not_allowed_to_override = ['url', 'api_key', 'headers', 'payload']
     _action_type: str = None
+    _logger = logging.getLogger(__name__)
 
     def __init__(self, **attrs):
         for attr, val in attrs.items():
@@ -31,26 +36,45 @@ class TextImprover:
 
     @staticmethod
     def _make_bold(sub_text):
-        return f'<i><b>{sub_text}</b></i>'
+        return f'<u><i><b>{sub_text}</b></i></u>'
 
-    def _request(self) -> dict:
-        text = requests.post(self._url, json=self._payload, headers=self._headers).text
-        return ast.literal_eval(text)
+    @staticmethod
+    def _choose_action(action: Action):
+        return action.action
+
+    async def _request(self) -> dict | None:
+        async with ClientSession() as session:
+            try:
+                async with session.post(self._url, json=self._payload, headers=self._headers, ssl=False) as response:
+                    response_data = await response.json()
+                    response.raise_for_status()
+                    self._logger.info(f"Request successful. Response: {response_data}")
+                    return response_data
+            except Exception as e:
+                self._logger.exception(f"An error occurred during the request: {e}")
+                return None
 
     def _format_ans(self, model: Model) -> [str, int]:
         corrected_text = self.text
         for curr_action in reversed(model.actions):
             corrected_text = (
                     corrected_text[:curr_action.start_index] +
-                    TextImprover._make_bold(curr_action.action) +
+                    self._make_bold(self._choose_action(curr_action)) +
                     corrected_text[curr_action.end_index:]
             )
         return corrected_text, len(model.actions)
 
-    def process(self):
-        api_response = self._request()
-        model = self._parse(api_response)
+    def _process(self, response_dict: dict):
+        model = self._parse(response_dict)
         return self._format_ans(model)
+
+    async def process(self) -> tuple[dict, int] | tuple[None, None]:
+        try:
+            response_dict = await self._request()
+            return self._process(response_dict)
+        except Exception as e:
+            self._logger.exception(f"An error occurred during processing: {e}")
+            return None, None
 
 
 class GrammarImprover(TextImprover):
@@ -62,22 +86,15 @@ class VocabularyImprover(TextImprover):
     _url = 'https://api.ai21.com/studio/v1/improvements'
     _payload = {
         "types": [
-            "fluency", "vocabulary/specificity",
-            "vocabulary/variety", "clarity/short-sentences",
+            "fluency",
+            "vocabulary/specificity",
+            "vocabulary/variety",
+            "clarity/short-sentences",
             "clarity/conciseness"
         ]
     }
     _action_type = 'improvements'
 
-    def reduce_bolds(self):
-        self.text = self.text.replace('<b>', '').replace('</b>', '').replace('<i>', '').replace('</i>', '')
-
-    def _format_ans(self, model: Model) -> [str, int]:
-        corrected_text = self.text
-        for curr_action in reversed(model.actions):
-            corrected_text = (
-                    corrected_text[:curr_action.start_index] +
-                    TextImprover._make_bold(curr_action.action[0]) +
-                    corrected_text[curr_action.end_index:]
-            )
-        return corrected_text, len(model.actions)
+    @staticmethod
+    def _choose_action(action: Action):
+        return choice(action.action)

@@ -31,6 +31,10 @@ class Correction(Action):
     class CorrectionType(Enum):
         SPELLING = 'Spelling'
         GRAMMAR = 'Grammar'
+        MISSING_WORD = 'Missing Word'
+        PUNCTUATION = 'Punctuation'
+        WORD_REPETITION = 'Word Repetition'
+        WRONG_WORD = 'Wrong Word'
 
     action: str
     correction_type: CorrectionType
@@ -56,4 +60,5 @@ class Model:
     def __init__(self, response_dict: dict, type_action: str):
         self._id = response_dict.pop('id')
         action_class = getattr(ActionType, type_action)
-        self.actions = [action_class(**action) for action in response_dict[type_action]]
+        self.actions = [action_class(**action) for action in
+                        sorted(response_dict[type_action], key=lambda x: x['startIndex'])]
