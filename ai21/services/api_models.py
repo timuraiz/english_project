@@ -4,6 +4,7 @@ from random import choice
 
 from ai21.services.models import Model
 from ai21.services.models.models import Action
+from bot import logging
 from config.config import cfg
 
 

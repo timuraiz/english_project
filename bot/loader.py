@@ -1,29 +1,18 @@
 import asyncio
-import logging
+import sys
+import os
 
 from aiogram import Bot, Dispatcher
 from aiogram.fsm.storage.memory import MemoryStorage
 
-import sys
-import os
-
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from config import config
+from bot import logging
 from bot.handlers import help_router, start_router, process_router
 
 
 async def main():
-    script_path = sys.argv[0]
-    script_directory = os.path.dirname(os.path.abspath(script_path)) + '/logs.log'
-    logging.basicConfig(
-        level=logging.INFO,
-        format='%(asctime)s [%(levelname)s] %(message)s',
-        handlers=[
-            logging.FileHandler(script_directory),  # Log to file
-        ]
-    )
-
     dp.include_router(start_router)
     dp.include_router(help_router)
     dp.include_router(process_router)
