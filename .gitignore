@@ -1,3 +1,9 @@
-../.idea
+.idea
 .DS_store
-*/__pycache__/
+ai21/__pycache__/
+ai21/services/__pycache__
+ai21/services/models/__pycache__
+bot/__pycache__/
+bot/handlers/__pycache__
+config/__pycache__
+config/.env
