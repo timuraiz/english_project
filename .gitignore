@@ -7,3 +7,5 @@ bot/__pycache__/
 bot/handlers/__pycache__
 config/__pycache__
 config/.env
+bot/messages/__pycache__/
+

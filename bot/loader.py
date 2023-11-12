@@ -14,9 +14,14 @@ from bot.handlers import help_router, start_router, process_router
 
 
 async def main():
+    script_path = sys.argv[0]
+    script_directory = os.path.dirname(os.path.abspath(script_path)) + '/logs.log'
     logging.basicConfig(
         level=logging.INFO,
-        format="%(asctime)s - %(levelname)s - %(name)s - %(message)s",
+        format='%(asctime)s [%(levelname)s] %(message)s',
+        handlers=[
+            logging.FileHandler(script_directory),  # Log to file
+        ]
     )
 
     dp.include_router(start_router)

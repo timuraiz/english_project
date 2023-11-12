@@ -6,8 +6,6 @@ from ai21.services.models import Model
 from ai21.services.models.models import Action
 from config.config import cfg
 
-logging.basicConfig(level=logging.INFO)
-
 
 class TextImprover:
     _url: str = None
