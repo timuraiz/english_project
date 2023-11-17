@@ -39,5 +39,4 @@ jobs:
             sudo docker stop $(sudo docker ps -q)
             sudo docker rm $(sudo docker ps -aq)
             sudo docker pull cr.yandex/${{ env.CR_REGISTRY }}/${{ env.CR_REPOSITORY }}:user${{ env.IMAGE_TAG }}
-            sudo docker run -d --name english-hui cr.yandex/${{ env.CR_REGISTRY }}/${{ env.CR_REPOSITORY }}:user${{ env.IMAGE_TAG }}
-            pwd
+            sudo docker run -d -e BOT_TOKEN=${{ secrets.BOT_TOKEN }} -e API_KEY=${{ secrets.API_KEY }} --name english-project-bot cr.yandex/${{ env.CR_REGISTRY }}/${{ env.CR_REPOSITORY }}:user${{ env.IMAGE_TAG }}

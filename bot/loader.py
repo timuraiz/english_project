@@ -8,7 +8,6 @@ from aiogram.fsm.storage.memory import MemoryStorage
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from config import config
-from bot import logging
 from bot.handlers import help_router, start_router, process_router
 
 
