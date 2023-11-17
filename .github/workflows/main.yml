@@ -35,12 +35,8 @@ jobs:
           key: ${{ secrets.VM_SSH_PRIVATE_KEY }}
           script: |
             sudo docker login --username oauth --password ${{ secrets.YANDEX_KEY }} cr.yandex
-            if [ "$(docker ps -q)" ]; then
-              sudo docker kill $(docker ps -q) &> /dev/null
-            fi
-            if [ "$(docker ps -a -q)" ]; then
-              sudo docker rm $(docker ps -a -q) &> /dev/null
-            fi
+            sudo docker stop $(sudo docker ps -q)
+            sudo docker rm $(sudo docker ps -aq)
             sudo docker pull cr.yandex/crp357h6d94o1kcgiqhv/english_project:user${{ github.sha }}
             echo "HERE"
             sudo docker run -d cr.yandex/crp357h6d94o1kcgiqhv/english_project:user${{ github.sha }}
