@@ -1,5 +1,4 @@
 from aiohttp import ClientSession
-import logging
 from random import choice
 
 from ai21.services.models import Model

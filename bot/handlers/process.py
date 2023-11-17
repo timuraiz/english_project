@@ -52,8 +52,3 @@ async def finish_proces_yes(message: types.Message, state: FSMContext):
         ), parse_mode=ParseMode.HTML
     )
     await state.clear()
-
-
-@router.message(StateFilter(None), Command('huesos'))
-async def pa(message: types.Message, state: FSMContext):
-    await message.answer('You are huesos!')
