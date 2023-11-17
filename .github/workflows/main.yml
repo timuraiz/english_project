@@ -39,5 +39,5 @@ jobs:
             sudo docker rm $(sudo docker ps -aq)
             sudo docker pull cr.yandex/crp357h6d94o1kcgiqhv/english_project:user${{ github.sha }}
             echo "HERE"
-            sudo docker run -d cr.yandex/crp357h6d94o1kcgiqhv/english_project:user${{ github.sha }}
+            sudo docker run -d --name english-hui cr.yandex/crp357h6d94o1kcgiqhv/english_project:user${{ github.sha }}
             pwd
