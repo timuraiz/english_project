@@ -49,5 +49,6 @@ jobs:
             sudo docker rm $(docker ps -a -q) &> /dev/null
           fi
           sudo docker pull cr.yandex/$CR_REGISTRY/$CR_REPOSITORY:user${IMAGE_TAG}
-          sudo docker run -d -p 80:80 cr.yandex/$CR_REGISTRY/$CR_REPOSITORY:user${IMAGE_TAG}
+          echo "HERE"
+          sudo docker run -d cr.yandex/$CR_REGISTRY/$CR_REPOSITORY:user${IMAGE_TAG}
      
