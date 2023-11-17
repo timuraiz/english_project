@@ -33,19 +33,15 @@ jobs:
           host: ${{ secrets.VM_HOST }}
           username: ${{ secrets.VM_USERNAME }}
           key: ${{ secrets.VM_SSH_PRIVATE_KEY }}
-          YANDEX_KEY: ${{ secrets.YANDEX_KEY }}
-          IMAGE_TAG: ${{ github.sha }}
-          CR_REGISTRY: crp357h6d94o1kcgiqhv
-          CR_REPOSITORY: english_project
           script: |
-            sudo docker login --username oauth --password $YANDEX_KEY cr.yandex
+            sudo docker login --username oauth --password ${{ secrets.YANDEX_KEY }} cr.yandex
             if [ "$(docker ps -q)" ]; then
               sudo docker kill $(docker ps -q) &> /dev/null
             fi
             if [ "$(docker ps -a -q)" ]; then
               sudo docker rm $(docker ps -a -q) &> /dev/null
             fi
-            sudo docker pull cr.yandex/$CR_REGISTRY/$CR_REPOSITORY:user${IMAGE_TAG}
+            sudo docker pull cr.yandex/crp357h6d94o1kcgiqhv/english_project:user${{ github.sha }}
             echo "HERE"
-            sudo docker run -d cr.yandex/$CR_REGISTRY/$CR_REPOSITORY:user${IMAGE_TAG}
+            sudo docker run -d cr.yandex/crp357h6d94o1kcgiqhv/english_projectY:user${{ github.sha }}
             pwd
