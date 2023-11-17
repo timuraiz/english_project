@@ -9,6 +9,11 @@ jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
 
+    env:
+      CR_REGISTRY: crp357h6d94o1kcgiqhv
+      CR_REPOSITORY: english_project
+      IMAGE_TAG: ${{ github.sha }}
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -19,13 +24,9 @@ jobs:
           yc-sa-json-credentials: ${{ secrets.YANDEX_SA_JSON }}
 
       - name: Build and push Docker image
-        env:
-          CR_REGISTRY: crp357h6d94o1kcgiqhv
-          CR_REPOSITORY: english_project
-          IMAGE_TAG: ${{ github.sha }}
         run: |
-          docker build -t cr.yandex/$CR_REGISTRY/$CR_REPOSITORY:user${IMAGE_TAG} .
-          docker push cr.yandex/$CR_REGISTRY/$CR_REPOSITORY:user${IMAGE_TAG}
+          docker build -t cr.yandex/${{ env.CR_REGISTRY }}/${{ env.CR_REPOSITORY }}:user${{ env.IMAGE_TAG }} .
+          docker push cr.yandex/${{ env.CR_REGISTRY }}/${{ env.CR_REPOSITORY }}:user${{ env.IMAGE_TAG }}
 
       - name: Connect to Yandex Cloud VM via SSH
         uses: appleboy/ssh-action@master
@@ -37,7 +38,6 @@ jobs:
             sudo docker login --username oauth --password ${{ secrets.YANDEX_KEY }} cr.yandex
             sudo docker stop $(sudo docker ps -q)
             sudo docker rm $(sudo docker ps -aq)
-            sudo docker pull cr.yandex/crp357h6d94o1kcgiqhv/english_project:user${{ github.sha }}
-            echo "HERE"
-            sudo docker run -d --name english-hui cr.yandex/crp357h6d94o1kcgiqhv/english_project:user${{ github.sha }}
+            sudo docker pull cr.yandex/${{ env.CR_REGISTRY }}/${{ env.CR_REPOSITORY }}:user${{ env.IMAGE_TAG }}
+            sudo docker run -d --name english-hui cr.yandex/${{ env.CR_REGISTRY }}/${{ env.CR_REPOSITORY }}:user${{ env.IMAGE_TAG }}
             pwd
