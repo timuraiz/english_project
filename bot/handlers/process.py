@@ -4,7 +4,7 @@ from aiogram.fsm.context import FSMContext
 from aiogram.filters.state import State, StatesGroup
 from aiogram.enums import ParseMode
 
-from ai21.services.api_models import GrammarImprover, VocabularyImprover
+from services.api_models import GrammarImprover, VocabularyImprover
 from bot.messages import process_messages
 
 

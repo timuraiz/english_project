@@ -1,10 +1,9 @@
 from aiohttp import ClientSession
 from random import choice
 
-from ai21.services.models import Model
-from ai21.services.models.models import Action
+from services.models.models import Action, Model
 from bot import logging
-from config.config import cfg
+from services.config.config import cfg
 
 
 class TextImprover:
